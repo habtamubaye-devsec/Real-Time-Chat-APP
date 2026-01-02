@@ -1,7 +1,6 @@
 import { Args, Context, Mutation, Query, Resolver, Subscription } from '@nestjs/graphql';
 import { Inject, UnauthorizedException, UseGuards } from '@nestjs/common';
 import type { Request as ExpressRequest } from 'express';
-import { RedisPubSub } from 'graphql-redis-subscriptions';
 
 import { PUB_SUB } from '../pubsub/pubsub.constants';
 import { GraphqlAuthGuard } from '../auth/grapghql-auth.guard';
@@ -11,13 +10,18 @@ import { SendMessageInput } from './message.dto';
 
 type AuthedRequest = ExpressRequest & { user?: { sub?: number } };
 
+type PubSubLike = {
+  publish: (triggerName: string, payload: unknown) => Promise<void> | void;
+  asyncIterator: (triggerName: string | string[]) => AsyncIterator<unknown>;
+};
+
 const MESSAGE_ADDED = 'messageAdded';
 
 @Resolver(() => Message)
 export class MessageResolver {
   constructor(
     private readonly messageService: MessageService,
-    @Inject(PUB_SUB) private readonly pubSub: RedisPubSub,
+    @Inject(PUB_SUB) private readonly pubSub: PubSubLike,
   ) {}
 
   @Query(() => [Message])

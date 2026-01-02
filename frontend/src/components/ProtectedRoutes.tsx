@@ -11,7 +11,7 @@ const ProtectedRoutes = ({ children }: { children: ReactNode }) => {
       toggleLoginModal();
     }
   }, [userId, toggleLoginModal]);
-  if (!userId) return null;
+  if (!userId) return <>Protected</>;
   return <>{children}</>;
 };
 

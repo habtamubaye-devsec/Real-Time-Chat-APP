@@ -2,6 +2,17 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Chatroom {
+  createdAt: DateTime
+  id: String!
+  name: String!
+  updatedAt: DateTime
+}
+
+input CreateChatroomInput {
+  name: String!
+}
+
 """
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
@@ -16,18 +27,33 @@ type LoginResponse {
   user: User!
 }
 
+type Message {
+  chatroomId: String!
+  content: String!
+  createdAt: DateTime
+  id: String!
+  imageUrl: String
+  updatedAt: DateTime
+  user: User
+  userId: String!
+}
+
 type Mutation {
+  createChatroom(input: CreateChatroomInput!): Chatroom!
   login(loginInput: LoginDto!): LoginResponse!
   logout: String!
   refreshToken: String!
   register(registerInput: RegisterDto!): RegisterResponse!
+  sendMessage(input: SendMessageInput!): Message!
   uploadFile(input: UploadFileInput!): UploadedFile!
   uploadProfile(file: UploadFileInput!, fullName: String!): User!
 }
 
 type Query {
+  chatrooms: [Chatroom!]!
   hello: String!
   helloAuth: String!
+  messages(chatroomId: String!): [Message!]!
   ping: String!
 }
 
@@ -40,6 +66,16 @@ input RegisterDto {
 
 type RegisterResponse {
   user: User
+}
+
+input SendMessageInput {
+  chatroomId: String!
+  content: String!
+  imageUrl: String
+}
+
+type Subscription {
+  messageAdded(chatroomId: String!): Message!
 }
 
 input UploadFileInput {

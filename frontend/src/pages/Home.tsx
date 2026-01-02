@@ -5,10 +5,8 @@ import ProtectedRoutes from "../components/ProtectedRoutes";
 function Home() {
   return (
     <MainLayout>
-      <>
-        <Sidebar />
-        HOME PAGE
-      </>
+      <Sidebar />
+      <div style={{ flex: 1, padding: "20px" }}>HOME PAGE</div>
     </MainLayout>
   );
 }
